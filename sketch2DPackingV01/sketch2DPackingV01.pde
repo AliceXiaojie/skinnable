@@ -2,8 +2,9 @@
 String containerFile = "irregular.jpg";
 
 Container c1;
-int grid = 30; //1mm = 4pixels, 1cell = 5mm
+int grid = 15; //1mm = 4pixels, 1cell = 5mm
 ArrayList<Module> modules;
+boolean available;
 
 
 void setup(){
@@ -23,30 +24,29 @@ void draw(){
   filter(GRAY);
   filter(THRESHOLD, 0.5);
   c1.effectiveArea();
+  // modules set by user
+  color g = color(127);
+  fill(g,200);
+  noStroke();
+  rect(63,38,30,45);
   
   
   int n = modules.size();
   for (int i = 0; i<n; i++){ // go through each module
-  Module m = modules.get(i);
-  boolean available = m.place(); 
-   if(available){
-     int r = int(random(50,100));
-     color gray = color(r);
-     fill(gray,200);
-     noStroke();
-     rect(m.placeX , m.placeY , m.width*grid, m.height*grid); // place the mudule into the container
-   }
-   else if(!available){
-     m.rotate();
-     if(m.place()){
-       color gray = color(127, 127, 127);
-       fill(gray,200);
-       noStroke();
-       rect(m.placeX , m.placeY , m.width*grid, m.height*grid); // place the mudule into the container 
-
-     }
-     else  println("can't place Module"+ (i+1));
-   }   
+    Module m = modules.get(i);
+    available = m.place(); 
+    if(available){
+      m.draw(); // place the mudule into the container 
+    }
+    else if(!available){
+      m.rotate();
+      available = m.place();
+      if(available){
+        m.draw(); // place the rotated mudule into the container
+        available = true; 
+      }
+      else if(!available) println("can't place Module"+ (i+1));
+    }   
   } 
   
   
@@ -153,6 +153,7 @@ class Module{
   // Attributor
   int width, height;
   int placeX=0 ; int placeY=0;
+  int r = int(random(50,100)); // set a random grayscale
   
 
   // Constructor
@@ -172,25 +173,25 @@ class Module{
       for(int m=0; m<=c1.num_Y; m++){
             breakn = false;
             collision = false;
-            color c = c1.containerImg.get(c1.left+grid*n+2,c1.bottom+grid*m+2);
+            color c = c1.containerImg.get(c1.left+grid*n+2,c1.bottom+grid*m+2); // avoid the grid lines and get color of the cell
             if(c == color(0,0,0)){
               x = c1.left+grid*n;
               y = c1.bottom+grid*m;
               
               for(int i = 0; i <= this.width; i++){
                  for(int j = 0; j <= this.height; j++){
-                   color p = get(x + grid*i +2, y + grid*j +2);
+                   color p = get(x + grid*i +2, y + grid*j +2); // avoid the grid lines and get color of the cell
                    if(p != color(0,0,0)){
                      collision = true;
                      break;
                    } 
                      
-                 } loop j ends
+                 } //loop j ends
                 if(collision == true){
                    break; 
                 }
                 
-              } loop i ends
+              } //loop i ends
               
               if(collision == false){
                 this.placeX = x;
@@ -203,18 +204,15 @@ class Module{
             }
             
 
-      } loop m ends
+      } //loop m ends
       if(breakn == true){
         break;
       }
-    } loop n ends
+    } //loop n ends
     if(available) {return true;}
     else return false;
   } // place method end
 
-
-    
-  
   void rotate(){
     int t;
     t = width;
@@ -222,5 +220,11 @@ class Module{
     height = t;
   } // rotate method end
   
+  void draw(){
+    color gray = color(this.r); 
+    fill(gray,200);
+    noStroke();
+    rect(this.placeX , this.placeY , this.width*grid, this.height*grid); // place the mudule into the container
+  }  // draw method end
 } // class Module end
 
