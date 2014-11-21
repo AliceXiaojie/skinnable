@@ -12,10 +12,10 @@ void setup(){
   size(c1.width, c1.height); 
   modules = new ArrayList<Module>();
   // ********** add modules here ***************
-  modules.add(new Module(33,25));  // Power 
-  modules.add(new Module(27,21));  // Button 
-  modules.add(new Module(20,21));  // LED
-  modules.add(new Module(66,27));  // Cloud
+  modules.add(new Module(25,33));  // Power 
+  modules.add(new Module(21,27));  // Button 
+  modules.add(new Module(21,20));  // LED
+  modules.add(new Module(27,66));  // Cloud
 } // setup end
 
 void draw(){
