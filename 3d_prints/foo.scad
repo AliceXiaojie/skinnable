@@ -1,3 +1,5 @@
+use <littlebits board.scad>
+
 module twitter(h)
 {
   scale([25.4/90, -25.4/90, 1]) union()
@@ -26,19 +28,29 @@ module twitter_inset(h)
   }
 }
 
-union()
+difference()
 {
-	twitter_outset(1);
-	difference()
-	{
-		twitter_outset(5);
-		twitter_inset(5);
-	}
+	scale([2,2,1])
+		union()
+		{
+			twitter_outset(5);
+			translate([0,0,4.5])
+				difference()
+				{
+					twitter_outset(5);
+					twitter_inset(5);
+				}
+		}
+	rotate(a=30)
+		translate([2,-3,2])
+			double_mag_module(4);
 }
 
+/*
 translate([0,0,20]) 
 {
 	twitter_inset(2);
 	translate([0,0,2])
 		twitter_outset(2);
 }
+*/
