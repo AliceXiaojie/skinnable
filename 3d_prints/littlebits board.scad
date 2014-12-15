@@ -38,7 +38,9 @@ difference()
 {
 	cube([C*5+2, 22, hole_depth*1.5], center=true);
 	double_mag_module(4);
+	/*
 	translate([0,0,hole_depth*1.5-hole_depth-1])
 		cube([C*3-2, 22, hole_depth+1], center=true);
+		*/
 	//mag_end();
 }
