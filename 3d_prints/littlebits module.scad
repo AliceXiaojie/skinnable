@@ -62,8 +62,9 @@ module mag_end(tab=false)
 	}
 }
 
-//Generate a little bits module n holes long (legs count as half holes;
-// e.g., the standard module such as the i3 button is 4 holes long).
+//Generate a standard (e.g., two-ended) little bits module n holes
+// long (legs count as half holes; e.g., the standard module such as
+// the i3 button is 4 holes long).
 module _lb_module(name="x00", length=4, tabs=false)
 {
 	translate([(length * mm(.25))/2 + depth/2, 0, 0])
@@ -125,14 +126,6 @@ module wire_in(tabs=false)
 			children(0);
 }
 
-wire_in()
-lb_module(i3)
-lb_module(i20)
-lb_module(w20)
-lb_module(i7)
-wire_out()
-;
-
 //Extract properties from the module list at bottom
 function lb_mod_name(mod_type) = mod_type[0];
 function lb_mod_size(mod_type) = mod_type[1];
@@ -147,6 +140,80 @@ module lb_module(mod_type, tabs=false)
 			children(0);
 }
 
+
+module branch()
+{
+	length = 7;
+	translate([-(length * mm(.25))/2, 0, 0])
+		mag_end(true);
+	translate([(length * mm(.25))/2, 0, 0])
+		rotate(180)
+			mag_end(true);
+	translate([0, 0, leg_support_height + board_thickness/2])
+		cube([length * mm(.25), width, board_thickness], center=true);
+
+	translate([-length/2 * mm(.25) - depth/2 + 5*mm(.25), width/2, 0])
+		rotate(-90)
+			mag_end(true);
+	translate([-length/2 * mm(.25) - depth/2 + 5*mm(.25), -width/2, 0])
+		rotate(90)
+			mag_end(true);
+}
+//branch();
+
+//Input module: ["name", [length, [top1, top2...], [bottom1, bottom2...]]]
+// where topX and bottomX are the hole position of the center of the top
+// and bottom magnetic connectors. For example, a branch would be:
+// ["branch", [7, [4], [4]]]
+// and a sequencer would be:
+// ["sequencer", [18, [3, 7, 11, 15], [3, 7, 11, 15]]]
+module mod(mod_type)
+{
+	echo("len(mod_type)", len(mod_type));
+	echo("len(mod_type[1])", len(mod_type[1]));
+	name = mod_type[0];
+	length = len(mod_type[1]) == undef ? mod_type[1] : mod_type[1][0];
+	top = len(mod_type[1]) == undef ? undef : mod_type[1][1];
+	bot = len(mod_type[1]) == undef ? undef : mod_type[1][2];
+		
+	//Main body
+	translate([(length * mm(.25))/2 + depth/2, 0, 0])
+	{
+		difference()
+		{
+			union()
+			{
+				translate([-(length * mm(.25))/2, 0, 0])
+					mag_end(true);
+				translate([(length * mm(.25))/2, 0, 0])
+					rotate(180)
+						mag_end(true);
+				translate([0, 0, leg_support_height + board_thickness/2])
+					cube([length * mm(.25), width, board_thickness], center=true);
+			}
+			translate([0, 0, leg_support_height + board_thickness])
+				write(name, font="letters.dxf", center=true, t=board_thickness/2, h=5);
+		}
+
+		for(i = top)
+			translate([-length/2 * mm(.25) - depth/2 + i*mm(.25), width/2, 0])
+				rotate(-90)
+					mag_end(true);
+
+		for(i = bot)
+			translate([-length/2 * mm(.25) - depth/2 + i*mm(.25), -width/2, 0])
+				rotate(90)
+					mag_end(true);
+	}
+}
+
+b = ["branch", [6, [4], [4]]];
+//mod(b);
+
+s = ["sequencer", [17, [3, 7, 11, 15], [3, 7, 11, 15]]];
+//mod(s);
+mod(i2);
+
 //Modules that I know or can guess the size for
 i2  = ["i2",   4];  //i2 toggle switch
 i3  = ["i3",   4];  //i3 button
@@ -156,16 +223,3 @@ i20 = ["i20",  4];  //i20 sound trigger
 i34 = ["i34",  4];  //i34 random
 w20 = ["w20", 10];  //w20 cloud
 o3  = ["o3",   4];  //o3 rgb led
-
-
-/*
-wire_in()
-lb_module(i2)
-lb_module(i3)
-lb_module(i7)
-lb_module(i3)
-lb_module(i17)
-lb_module(w20)
-lb_module(i3)
-;
-*/
