@@ -13,8 +13,10 @@ C             = hole_diameter + between_holes;
 // the printer_multiplier factor.
 module mag_end()
 {
-	translate([0, 0, 0])
-		cylinder(d=hole_diameter * printer_multiplier, h=hole_depth, $fn=25);
+	//translate([0, 0, 0])
+		//cylinder(d=hole_diameter * printer_multiplier, h=hole_depth, $fn=25);
+	translate([0, 0, hole_depth/2])
+		cube([1, 2*C, hole_depth], center=true);
 	translate([0, -C, 0])
 		cylinder(d=hole_diameter * printer_multiplier, h=hole_depth, $fn=25);
 	translate([0, C, 0])
