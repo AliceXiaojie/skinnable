@@ -63,9 +63,8 @@ void resetEdges(DefaultEdge[] eList)
 {
   for(int n = 0; n < eList.length; n++)
   {
-    DefaultEdge e = eList[n];
-    String s = graph.getEdgeSource(e); // get source vertex of e
-    String t = graph.getEdgeTarget(e); // get target vertex of e
+    String s = graph.getEdgeSource(eList[n]); // get source vertex of e
+    String t = graph.getEdgeTarget(eList[n]); // get target vertex of e
     graph.addEdge(s,t);
   }
 }
@@ -79,9 +78,8 @@ void combine(DefaultEdge[] arr, int k, int startId, DefaultEdge[] branch, int nu
 
       for(int n = 0; n < branch.length; n++)
       {
-        DefaultEdge e = branch[n];
-        String s = graph.getEdgeSource(e);
-        String t = graph.getEdgeTarget(e);
+        String s = graph.getEdgeSource(branch[n]);
+        String t = graph.getEdgeTarget(branch[n]);
         graph.removeEdge(s,t);
       }
       
