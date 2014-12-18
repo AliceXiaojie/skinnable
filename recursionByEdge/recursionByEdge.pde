@@ -19,88 +19,81 @@ void setup()
   DefaultEdge[] branch;
     graph = new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
     // *********** Add Vertexs Here ***********
-    graph.addVertex("A");
-    graph.addVertex("B");
-    graph.addVertex("C");
-    graph.addVertex("D");
+    graph.addVertex("Aluminum");
+    graph.addVertex("Boron");
+    graph.addVertex("Carbon");
+    graph.addVertex("Durian");
     // *********** Add Edges Here ***********
-    graph.addEdge("A", "B");
-    graph.addEdge("B", "C");
-    graph.addEdge("C", "D");
+    graph.addEdge("Aluminum", "Boron");
+    graph.addEdge("Boron", "Carbon");
+    graph.addEdge("Carbon", "Durian");
     
     edges = graph.edgeSet();
 
-  for(int k = 0; k <= edges.size(); k++){
+  for(int k = 0; k <= edges.size(); k++)
+  {
+    edgeList = edges.toArray(new DefaultEdge[edges.size()]);
+    branch = new DefaultEdge[k];
+    combine(edgeList, k, 0, branch, 0, edgeList);
+  }
+}
 
-      for(DefaultEdge e : edges){ // reset all edges
-        String s = graph.getEdgeSource(e); // get source vertex of e
-        String t = graph.getEdgeTarget(e); // get target vertex of e
-        graph.addEdge(s,t);
-      }
 
-      edgeList = edges.toArray(new DefaultEdge[edges.size()]);
-      branch = new DefaultEdge[k];
-
-      combine(edgeList, k, 0, branch, 0, edgeList);
-  } // for end
-
-} // setup end
-
-void combine(DefaultEdge[] arr, int k, int startId, DefaultEdge[] branch, int numElem, DefaultEdge[] eList){
-        
-        if (numElem == k)
-        {
-            for(int n = 0; n < eList.length; n++){ // reset all edges
-              DefaultEdge e = eList[n];
-              String s = graph.getEdgeSource(e); // get source vertex of e
-              String t = graph.getEdgeTarget(e); // get target vertex of e
-              graph.addEdge(s,t);
-              // println(s + "   ->   " + t);
-            }
-
-            for(int n = 0; n < branch.length; n++){
-              DefaultEdge e = branch[n];
-               String s = graph.getEdgeSource(e);
-               String t = graph.getEdgeTarget(e);
-               // println(s + "   ->   " + t);
-              graph.removeEdge(s,t);
-            }
-
-            try
-            {
-              DOTExporter exporter = new DOTExporter();
-              File ff = new File(dataPath("/tmp/graph_" + v + ".dot"));
-              v++;
-              if(!ff.exists())
-              {
-                  ff.createNewFile();
-              }
-              FileWriter fw = new FileWriter(ff, true);
-              BufferedWriter bw = new BufferedWriter(fw);
-              PrintWriter pw = new PrintWriter(bw);
-              //PrintWriter f = new PrintWriter(new BufferedWriter(new FileWriter(ff, true)));
-              exporter.export(pw, graph);
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-            for(int n = 0; n < eList.length; n++){ // reset all edges
-              DefaultEdge e = eList[n];
-              String s = graph.getEdgeSource(e); // get source vertex of e
-              String t = graph.getEdgeTarget(e); // get target vertex of e
-              graph.addEdge(s,t);
-              // println(s + "   ->   " + t);
-            }
-            return;
-
-        }
-
-        for (int i = startId; i < arr.length; ++i)
-        {
-            branch[numElem++] = arr[i];
-            combine(arr, k, ++startId, branch, numElem, eList);
-            --numElem;
-        }
+void exportGraph()
+{
+    try
+    {
+      DOTExporter exporter = new DOTExporter(
+        new VertexNameProvider(){public String getVertexName(Object object){return object.toString();}},
+        null, null);
+      File ff = new File(dataPath("/tmp/graph_" + v + ".dot"));
+      v++;
+      if(!ff.exists())
+        ff.createNewFile();
+      exporter.export(new PrintWriter(new BufferedWriter(new FileWriter(ff, false))), graph);
     }
+    catch(Exception e)
+    {
+      e.printStackTrace();
+    }
+}
+
+
+void resetEdges(DefaultEdge[] eList)
+{
+  for(int n = 0; n < eList.length; n++)
+  {
+    DefaultEdge e = eList[n];
+    String s = graph.getEdgeSource(e); // get source vertex of e
+    String t = graph.getEdgeTarget(e); // get target vertex of e
+    graph.addEdge(s,t);
+  }
+}
+
+
+void combine(DefaultEdge[] arr, int k, int startId, DefaultEdge[] branch, int numElem, DefaultEdge[] eList)
+{
+    if (numElem == k)
+    {
+      resetEdges(eList);
+
+      for(int n = 0; n < branch.length; n++)
+      {
+        DefaultEdge e = branch[n];
+        String s = graph.getEdgeSource(e);
+        String t = graph.getEdgeTarget(e);
+        graph.removeEdge(s,t);
+      }
+      
+      exportGraph();
+      return;
+    }
+
+    for (int i = startId; i < arr.length; ++i)
+    {
+      branch[numElem++] = arr[i];
+      combine(arr, k, ++startId, branch, numElem, eList);
+      --numElem;
+    }
+}
 
