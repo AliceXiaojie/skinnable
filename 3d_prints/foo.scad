@@ -1,4 +1,4 @@
-use <littlebits board.scad>
+include <littlebits module.scad>
 
 module twitter(h)
 {
@@ -18,7 +18,6 @@ module twitter_outset(h)
   }
 }
 
-
 module twitter_inset(h)
 {
   scale([25.4/90, -25.4/90, 1]) union()
@@ -33,24 +32,23 @@ difference()
 	scale([2,2,1])
 		union()
 		{
-			twitter_outset(5);
-			translate([0,0,4.5])
-				difference()
-				{
-					twitter_outset(5);
-					twitter_inset(5);
-				}
+			translate([0,0,-5])
+				twitter_outset(5);
+			difference()
+			{
+				twitter_outset(15);
+				twitter_inset(25);
+			}
 		}
-	rotate(a=30)
-		translate([2,-3,2])
-			double_mag_module(4);
+	parts();
 }
+//parts();
 
-/*
-translate([0,0,20]) 
+module parts()
 {
-	twitter_inset(2);
-	translate([0,0,2])
-		twitter_outset(2);
+	color("red")
+		rotate(75)
+	translate([-1.4*modlen(p3), 0, 0])
+		lbmod(p3)
+		lbmod(w1r);
 }
-*/

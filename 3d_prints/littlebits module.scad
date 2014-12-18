@@ -63,76 +63,45 @@ module mag_end(tab=false)
 }
 
 
-module _wire(tabs=false)
-{
-	length = 2;
-	union()
-	{
-		translate([-(length * mm(.25))/2, 0, 0])
-			mag_end(tabs);
-		//board
-		translate([0, 0, leg_support_height + board_thickness/2])
-			cube([wire_depth, module_width, board_thickness], center=true);
-	}
-}
-
-module wire_out(tabs=false)
-{
-	translate([wire_depth/2 + module_depth/2 - .25, 0, 0])
-		difference()
-		{
-			_wire(tabs);
-			translate([0, 0, leg_support_height + board_thickness])
-				write("w1", font="letters.dxf", center=true, t=board_thickness/2, h=5);
-		}
-}
+function modlen(mod_type)    = mod_type[1] * mm(.25);
+function modwidth(mod_type)  = module_width;
+function modheight(mod_type) = module_height;
 
 
-module wire_in(tabs=false)
-{
-	translate([wire_depth/2, 0, 0])
-		difference()
-		{
-			rotate(180)
-				_wire(tabs);
-			translate([0, 0, leg_support_height + board_thickness])
-				write("w1", font="letters.dxf", center=true, t=board_thickness/2, h=5);
-		}
-	if($children)
-		translate([wire_depth + module_depth/2 - .25, 0, 0])
-			children(0);
-}
-
-
-//Input module: ["name", length, [top1, top2...], [bottom1, bottom2...]]
+//Input module: ["name", length, [top1, top2...], [bottom1, bottom2...], [l,r]]
 // where topX and bottomX are the hole position of the center of the top
 // and bottom magnetic connectors. For example, a button would be:
-// ["button", 4]
+//   ["button", 4]
 // a branch would be:
-// ["branch", 7, [4], [4]]
+//   ["branch", 7, [4], [4]]
 // and a sequencer would be:
-// ["sequencer", 18, [3, 7, 11, 15], [3, 7, 11, 15]]
-module mod(mod_type)
+//   ["sequencer", 18, [3, 7, 11, 15], [3, 7, 11, 15]]
+// Use optional [l, r] to specify whether to place left and right magnetic
+// end pieces; e.g., power modules have only right connections.
+module lbmod(mod_type)
 {
 	name   = mod_type[0];
-	length = mod_type[1];
+	length = modlen(mod_type);
 	top    = mod_type[2];
 	bot    = mod_type[3];
+	lr     = mod_type[4] ? mod_type[4] : [true, true];
 		
-	translate([(length * mm(.25))/2 + module_depth/2, 0, 0])
+	translate([length/2 + module_depth/2, 0, 0])
 	{
 		//Main body
 		difference()
 		{
 			union()
 			{
-				translate([-(length * mm(.25))/2, 0, 0])
-					mag_end(true);
-				translate([(length * mm(.25))/2, 0, 0])
-					rotate(180)
+				if(lr[0])
+					translate([-length/2, 0, 0])
 						mag_end(true);
+				if(lr[1])
+					translate([length/2, 0, 0])
+						rotate(180)
+							mag_end(true);
 				translate([0, 0, leg_support_height + board_thickness/2])
-					cube([length * mm(.25), module_width, board_thickness], center=true);
+					cube([length, module_width, board_thickness], center=true);
 			}
 			translate([0, 0, leg_support_height + board_thickness])
 				write(name, font="letters.dxf", center=true, t=board_thickness/2, h=5);
@@ -149,19 +118,22 @@ module mod(mod_type)
 			translate([-length/2 * mm(.25) - module_depth/2 + i*mm(.25), -module_width/2, 0])
 				rotate(90)
 					mag_end(true);
+
+	//Special cases -------
+
+		if(name == "p3")  //Power; add block for subtracting usb power
+		{
+			//usb block: 15x10x5
+			translate([-length/2 - 2.5, 0, board_thickness+5])
+				cube([15 ,10, 5], center=true);
+		}
+
 	}
 
 	if($children)
-		translate([(length * mm(.25)) + module_depth, 0, 0])
+		translate([length + module_depth, 0, 0])
 			children(0);
 }
-
-b = ["branch", 6, [4], [4]];
-//mod(b);
-
-s = ["sequencer", 17, [3, 7, 11, 15], [3, 7, 11, 15]];
-mod(s)
-mod(i2);
 
 //Modules that I know or can guess the size for
 i2  = ["i2",   4];  //i2 toggle switch
@@ -174,3 +146,7 @@ i34 = ["i34",  4];  //i34 random
 w2  = ["w2", 6, [4], [4]]; //w2 branch
 w20 = ["w20", 10];  //w20 cloud
 o3  = ["o3",   4];  //o3 rgb led
+w1l = ["w1", 2, [], [], [false, true]];  //w1 wire right connector
+w1r = ["w1", 2, [], [], [true, false]];  //w1 wire right connector
+p1  = ["p1", 5, [], [], [false, true]];  //p1 barrel power
+p3  = ["p3", 4, [], [], [false, true]];  //p3 usb power
