@@ -1,6 +1,13 @@
 \documentclass{chi-ext}
+\usepackage{subfigure}
+\usepackage{amsmath}
+\usepackage{todonotes}
+\usepackage{ragged2e}
+
+\RaggedRight
 
 \newcommand{\papertitle}{Towards ``Skinnable'' Physical Objects}
+\renewenvironment{quote}{\list{}{\leftmargin=0.1in\rightmargin=0.1in}\item[]}{\endlist}
 \title{\papertitle}
 
 \numberofauthors{3}
@@ -64,11 +71,6 @@
 \maketitle
 
 \begin{abstract}
-	In this sample we describe the formatting requirements for various SIGCHI related submissions 
-	and offer recommendations on writing for the worldwide SIGCHI readership. 
-	%Do not change the page size or page settings.
-	Please review this document even if you have submitted to SIGCHI conferences before, 
-	some format details have changed relative to previous years.
 \end{abstract}
 
 \keywords{}
@@ -80,34 +82,217 @@ See: \url{http://www.acm.org/about/class/1998/}
 for help using the ACM Classification system.
 \textcolor{red}{Optional section to be included in your final version, but strongly encouraged.}
 
+\section{Intro from proposal}
 
-\section{Introduction}
+	The ``Internet of Things'' (IoT) is becoming an increasingly
+	popular topic for commercial products. Devices such as the Nest
+	learning thermostat, the Twine home automation and monitoring
+	device, and the Kwikset K$\overline{\mbox{e}}$vo Bluetooth lock are popular
+	consumer IoT products. At the core, each of these devices follow the
+	same basic hardware and software pattern: sensors (such as a
+	temperature sensor), actuators (such as LEDs or the
+	motor to turn the lock), a radio (Bluetooth or WiFi), a processor
+	(to control the device) and cloud-based software services. The basic
+	hardware package of processor, radio, sensors and actuators is
+	flexible enough to do many things \cite{Lyons:2013jc}; however, IoT
+	devices are limited to the form and functionality that the
+	manufacturer has designed.
 
-	Motivation: we want to let non-technical people download
-	pre-configured component-based-assembly circuits (e.g. LittleBits)
-	and print out cases for them. For example, the Twitter bird. Or the
-	weather statue.
+	Another current area of intense interest is digital fabrication,
+	which includes 3D printers, laser cutters, milling machines, and
+	other similar equipment. Although these devices have only recently
+	evolved from industrial machines into hobbyist equipment, they
+	hold enormous promise for revolutionizing manufacturing. Writing
+	about 3D printing in his popular-press book, Cornell professor Hod
+	Lipson states \cite{Lipson:2013va},
+	\begin{quote}
+		\textit{3D printing gives regular people powerful new tools of
+			design and production. People with modest bank accounts will
+			acquire the same design and manufacturing power that was once
+			the private reserve of professional designers and big
+			manufacturing companies. In a 3D printed future world, people
+			will make what they need, when and where they need it.}
+	\end{quote}
+	There is an opportunity to combine these two new technologies to
+	allow individuals to create their own personalized IoT devices.  By
+	making it easy to embed standardized hardware modules within
+	fabricated objects and to add customized behaviors, users will be
+	able to create their own, personal IoT devices. For example, a user
+	might download a model of a bird and embed a thermometer IoT device
+	inside it to track the temperature in her living room, and then a
+	toy train to track the temperature in her son's room. Both of these
+	devices do the same thing, but take very different forms. Another
+	example is printing a customized wearable bracelet; one user might
+	add an accelerometer to track steps while another might add a
+	vibration motor to give alerts.
+
+	We borrow the idea of changing the form of an object while
+	maintaining the same functionality from software; many applications
+	support ``skins'' or themes that do just this. Rather than enhancing
+	the usability of the software, usually skins and themes serve an
+	aesthetic or ludic purpose.  The challenge addressed in this
+	research is that, unlike software, skinnable physical objects must
+	meet requirements around manufacturability, size, cost, and ease of
+	assembly.
+
+	As a motivating example, consider Jenny, a baseball fan. Her
+	favorite team, the San Francisco Giants, has been in the news lately
+	due to changes in team membership. She has the idea to print out the
+	team's logo (a ``S'' and ``F'' overlaid on each other) on her 3D
+	printer and place it on her kitchen counter; whenever breaking news
+	about the Giants is posted on the ESPN sports news site, she wants
+	the team's fight song to play briefly to alert her. She also wants a
+	button on the logo that will post the message ``I love the Giants!''
+	to Twitter.
+
+	While this example is straightforward, realizing the idea is a
+	difficult one for a non-technical individual. To start from scratch,
+	Jenny must use a 3D modeling program to create the logo, ensure that
+	it can be successfully printed, conceive of an electronic circuit
+	that connects to the Internet and fits inside her logo, and
+	fabricate and assemble these parts. Even if such skills were within
+	Jenny's reach, the process would be quite time consuming and perhaps
+	not worth the trouble.
+	
+	The capabilities currently exist for Jenny to download a model of an
+	object to print via online services such as
+	Thingiverse\footnote{\url{http://thingiverse.com}}; to assemble
+	pre-specified modular electronic circuits such as
+	LittleBits\footnote{\url{http://littlebits.cc}}; and to configure
+	the electronics to react to online events via a service like If This
+	Then That\footnote{\url{http://ifttt.com}} (IFTTT). However, to combine the
+	circuit with the downloaded object in itself requires a non-trivial
+	level of technical skill; to further decompose the circuit, put
+	parts of it in desired locations, fit the rest of the modules in
+	where they will best fit, and to link those components together via
+	wires, demands a high level of patience, experience, and technical
+	know-how.
+
+	In this paper, we describe the initial steps for a system to enable
+	easy end-user skinning for physical objects. Our system takes as
+	input a modular circuit description, a 3D model file, and a
+	specification of where certain of the modules (e.g., a button)
+	should be placed relative to the model. It outputs a new model file
+	modified to fit the components and a modified circuit layout showing
+	where wires must be added to accomodate the physical structure.
 
 
 \section{Related Work}
+	Tanenbaum et~al.\ identified \textit{playfulness}, \textit{utility}, and
+	\textit{expressiveness} as central themes for individuals engaged in
+	making things \cite{Tanenbaum:2013ji}. These themes will come into
+	play more and more as digital fabrication technology reaches the
+	home, enabling people to design and customize their own objects.
 
-	With the emergence of digital fabrication technologies, there have
-	been a number of projects intended to simplify the process of
-	creating interactive objects.
+	Long before digital fabrication equipment was commonly available,
+	software allowed users to pursue playfulness, utility, and
+	expressiveness by customizing the look and feel of many programs.
+	For example, the famous Winamp audio player featured skins which
+	could change the look and feel of the application,
+	and the Windows operating system includes themes which allow the
+	user to change color schemes and background images.
 
-	Two recent projects considered building customized enclosures for
-	exiting electronics. Weichel et~al.\ created a system for designing
-	laser-cut cases for projects created with the .NET
-	Gadgeteer electronics prototyping platform \cite{Weichel:2013kn}.
+	More recently, a number of research projects have focused on
+	allowing users to design personalized objects for fabrication:
+	chairs \cite{Saul:2011cy}, toys \cite{Blauvelt:2006ui, Zhu:2012wk},
+	and even visualizations \cite{Khot:2014gm,Swaminathan:2014hu}.
+	However, these examples all produce self-contained objects, not
+	meant to work with other objects or incorporate extra functionality.
 
-	Building enclosures:
-		\cite{Schneegass:2014ip} (NatCut: An Interactive Tangible Editor for
-			Physical Object Fabrication)
-		\cite{Weichel:2013kn} (Enclosed: a component-centric interface for
-			designing prototype enclosures)
+	One of the most common ways to help non-experts design objects is to
+	remove the necessity for users to learn complex computer-aided
+	design (CAD) tools.  Some research has employed sketch-based
+	interfaces as a simpler method for users to create computer models,
+	for example to sketch single-perspective views of three-dimensional
+	polyhedral objects, which the computer then interprets and turns
+	into a full 3D model \cite{Lau:2010ug, Masry:2005dp, OH:2006gf,
+	Plumed:2013bu}, or to work with two-dimensional sketches for cutting
+	with a laser cutter or other 2D fabrication machine
+	\cite{Johnson:2012gu, Mori:2007ez, OH:2006gf, Saul:2011cy}. These
+	systems are generally intended for the fabrication of new objects,
+	rather than to modify or work with existing ones.
+
+	Lots of focus on physical prototyping (\cite{Hodges:2013gh},
+	\cite{Hartmann:2006p6051}); not as much on integrating electronics
+	into actual things you might want to use.
+
+	Several systems exist that allow users to work with existing
+	electronic components to embed them in fabricated forms. .NET Gadgeteer
+	\cite{Villar:2012hd}, a modular electronics system, provides 3D
+	models of its various modules that can be used with computer-aided
+	design (CAD) software to incorporate them into different designs.
+	Weichel et~al.'s Enclosed system \cite{Weichel:2013kn} builds on
+	this work with a simplified CAD system that uses the Gadgeteer
+	modules as first-class components. NatCut \cite{Schneegass:2014ip}
+	allows users to design a laser-cut electronics enclosure in 2D on an
+	interactive tabletop, and to place physical Gadgeteer modules to
+	indicate where they should go in the finished enclosure. These
+	systems focus more on prototyping rather than creating a finished,
+	personalized item for individual use, and require users to manually
+	specify where each electronic module should be placed.
+	
+	%LittleBits
+	%RFDuino
+	%SAM:
+	%https://www.kickstarter.com/projects/1842650056/sam-the-ultimate-internet-connected-electronics-ki
+
+	%2D packing:
+		%\cite{Vanek:2014ba} (PackMerger: A 3D Print Volume Optimizer)
 
 	
-\section{Stuff}
+\section{System Description}
+
+	Rather than helping users with technical skills prototype various
+	designs for interactive objects, the ultimate goal of our system is
+	to allow a non-expert user to create finished objects by downloading
+	a modular circuit description and ``skinning'' it with a (possibly
+	unrelated) downloaded 3D model. We envision a user loading a
+	machine-readable modular circuit diagram, an associated IFTTT
+	recipe\todo{explain IFFT recipes somewhere}, and a 3D model into our
+	system, interactively specifiying the locations on the model where
+	interactive components should be placed, and receiving a new,
+	fabricatible model file modified to support embedding the
+	components, as well as instructions on how to assemble the new
+	device.
+
+	In this paper, we present our initial work towards this goal. We
+	address the challenge of placing modules inside a model without
+	growing the model to extreme sizes. This is a variation on the
+	packing problem---trying to pack items into a space as efficiently
+	as possible. Our application introduces two additional constraints
+	to the packing problem: modules that the user places at a specific
+	position relative to the model (e.g., an LED for the eye of a bird),
+	and that the modules must remain connected in a particular order to
+	maintain the functional circuit.
+
+	For our initial implementation, we use LittleBits modules.
+	LittleBits is a commercial electronics experimentation platform
+	consisting of single-purpose electronics modules that attach to each
+	other via magnets. LittleBits modules are ideal for people
+	inexperienced in electronics because they cannot be put together
+	incorrectly; that is, any physically-possible configuration, while
+	not necessarily functional in the expected way, will not cause
+	damage. There is a thriving community of LittleBits experimenters
+	who post circuit diagrams to the company's website.
+	The two drawbacks of LittleBits are size and expense: the average
+	module is about 1x.8in (26x21mm), and prices range from US \$8 (a
+	button) to \$60 (the Internet-connected ``CloudBit''). However, it
+	is not unreasonable to expect drops in both size and price, and our
+	research will still apply.
+
+	The preliminary implementation described in this paper requires
+	hand-coding of the circuit and manual placement of the
+	fixed-location circuit modules. The software then generates
+	configurations $C$ for the remaining modules, with the objective of
+	minimizing the function
+	\[
+		F(C) = wS + (1-w)W
+	\]
+	where $S$ is the scale of the completed object, $W$ is the number of
+	extra wires required, and $w \in [0,1]$ adjusts the weight between
+	the two factors.
+	
+
 	Features:
 	\begin{itemize}
 		\item Represent the circuit as an undirected graph (currently
