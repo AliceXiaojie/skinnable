@@ -84,6 +84,7 @@ void combine(DefaultEdge[] arr, int k, int startId, DefaultEdge[] branch, int nu
       }
       
       exportGraph();
+      resetEdges(eList);
       return;
     }
 
