@@ -27,9 +27,10 @@ module twitter_inset(h)
   }
 }
 
+scalef = 3;
 difference()
 {
-	scale([2,2,1])
+	scale([scalef,scalef,1])
 		union()
 		{
 			translate([0,0,-5])
@@ -37,18 +38,30 @@ difference()
 			difference()
 			{
 				twitter_outset(15);
-				twitter_inset(25);
+				twitter_inset(15);
 			}
 		}
 	parts();
 }
-//parts();
+parts();
 
 module parts()
 {
+	translate([38, 7, 0])
+	rotate(115)
+		color("blue")
+			lbmod(w1l)
+			lbmod(o3);
+
 	color("red")
-		rotate(75)
-	translate([-1.4*modlen(p3), 0, 0])
+		rotate(130)
+	translate([-40, 28, 0])
 		lbmod(p3)
+		lbmod(w1r);
+
+	color("lightgreen")
+	translate([-44, 20, 0])
+		rotate(-25)
+		lbmod(w20)
 		lbmod(w1r);
 }

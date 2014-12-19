@@ -5,20 +5,18 @@ function mm(in) = in * 25.4;
 
 board_thickness    = 1.75;     //thickness of circuit board
 module_width       = mm(.8);   //width of whole module (y)
+leg_radius         = mm(1/8);  //radius of leg
+leg_height         = mm(.1);   //height of round leg part
 leg_support_height = mm(.1);   //height of square leg part
+space_between_legs = mm(.5);   //space between legs
 module_depth       = mm(3/16); //depth of plastic end (x)
 module_height      = mm(.5);   //height of whole module (z)
-wire_depth         = 13;       //depth of entire wire module (x)
 
 
 //Generate one magnetic end, translated so that the feet sink below
 // the x/y plane
 module mag_end(tab=false)
 {
-	leg_rad            = mm(1/8);  //radius of leg
-	leg_height         = mm(.1);   //height of round leg part
-	leg_support_height = mm(.1);   //height of square leg part
-	space_between_legs = mm(.5);   //space between legs
 	tab_depth          = 2;        //depth of mating tab (x)
 	tab_width          = mm(1/8);  //width of mating tab (y)
 	tab_height         = mm(.05);  //height of mating tab (z)
@@ -31,12 +29,12 @@ module mag_end(tab=false)
 			{
 				//leg 1
 				translate([0, -(space_between_legs/2), 0])
-					cylinder(r=leg_rad, h=leg_height, $fn=25);
+					cylinder(r=leg_radius, h=leg_height, $fn=25);
 				//leg 2
 				translate([0, (space_between_legs/2), 0])
-					cylinder(r=leg_rad, h=leg_height, $fn=25);
+					cylinder(r=leg_radius, h=leg_height, $fn=25);
 				//leg support
-				translate([leg_rad/2, 0, (module_height - leg_height)/2 + leg_support_height])
+				translate([leg_radius/2, 0, (module_height - leg_height)/2 + leg_support_height])
 					cube([module_depth, module_width, module_height - leg_height], center=true);
 			}
 
@@ -124,14 +122,39 @@ module lbmod(mod_type)
 		if(name == "p3")  //Power; add block for subtracting usb power
 		{
 			//usb block: 15x10x5
-			translate([-length/2 - 2.5, 0, board_thickness+5])
-				cube([15 ,10, 5], center=true);
+			translate([-length/2, 0, board_thickness+5])
+				cube([40 ,10, 5], center=true);
+
+			//extra feet
+			translate([-mm(.25)/2, 0, leg_height-leg_support_height/2])	
+			{
+				difference()
+				{
+					union()
+					{
+						translate([0, -space_between_legs/2, -leg_support_height-leg_height/2])
+							cylinder(r=leg_radius, h=leg_height, $fn=25);
+						translate([0, space_between_legs/2, -leg_support_height-leg_height/2])
+							cylinder(r=leg_radius, h=leg_height, $fn=25);
+					}
+					translate([0,0,leg_height])
+						cube([mm(1), space_between_legs, mm(1)], center=true);
+				}
+				cube([3 + 2*leg_radius, module_width, leg_support_height], center=true);
+			}
+		}
+		
+		if(name == "o3")   //RGB LED; add cylinder for cutting out LED
+		{
+			translate([0, 0, 0])
+				cylinder(d=2, h=module_height*2);
 		}
 
 	}
 
+	//Line up child modules; -.001 is to avoid tiny wall in foot holes
 	if($children)
-		translate([length + module_depth, 0, 0])
+		translate([length + module_depth - .001, 0, 0])
 			children(0);
 }
 
