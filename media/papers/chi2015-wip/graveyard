@@ -1,0 +1,17 @@
+
+	As digital fabrication technologies become more available to the
+	home user, it will be necessary to accomodate a range of skills for
+	end users. Most current 3D printing technology, for example, still
+	requires more knowledge and skill than the average non-technical
+	user might possess. In this project, our goal is allow non-expert
+	users to download objects and imbue them with some functionality.
+
+	This work was inspired by the observation that for many potential
+	fabricated interactive objects, the electronic functionality is the
+	same or similar, and is only loosely coupled to the physical form.
+	For example, the BitWear project \cite{Lyons:2013jc} placed the same
+	button/LED/radio module into various 3D printed forms. We imagine a
+	system of modular, easy-to-assemble electronics (e.g.,
+	LittleBits\footnote{\url{http://littlebits.cc}},
+	magnetically-connectable modules) that can be placed within
+	fabricated objects to give them interactive capabilities.
