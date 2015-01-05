@@ -1,12 +1,102 @@
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.SimpleGraph;
-import org.jgrapht.traverse.DepthFirstIterator;
-import org.jgrapht.traverse.GraphIterator;
-import java.util.Iterator;
-import java.util.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import org.jgrapht.UndirectedGraph; 
+import org.jgrapht.graph.DefaultEdge; 
+import org.jgrapht.graph.SimpleGraph; 
+import org.jgrapht.traverse.DepthFirstIterator; 
+import org.jgrapht.traverse.GraphIterator; 
+import java.util.Iterator; 
+import java.util.*; 
+import java.io.BufferedWriter; 
+import java.io.FileWriter; 
+
+import com.mxgraph.layout.orthogonal.*; 
+import com.mxgraph.model.*; 
+import com.mxgraph.analysis.*; 
+import com.jgraph.components.labels.*; 
+import com.jgraph.navigation.*; 
+import com.jgraph.layout.tree.*; 
+import org.jgrapht.graph.*; 
+import org.jgrapht.demo.*; 
+import com.jgraph.layout.simple.*; 
+import com.mxgraph.util.png.*; 
+import com.mxgraph.swing.*; 
+import com.mxgraph.swing.handler.*; 
+import com.mxgraph.layout.hierarchical.*; 
+import com.mxgraph.generatorfunction.*; 
+import org.jgraph.*; 
+import com.mxgraph.layout.orthogonal.model.*; 
+import org.jgraph.plaf.*; 
+import org.jgrapht.traverse.*; 
+import com.mxgraph.util.svg.*; 
+import org.jgraph.plaf.basic.*; 
+import com.mxgraph.view.*; 
+import com.jgraph.layout.organic.*; 
+import com.mxgraph.sharing.*; 
+import com.mxgraph.layout.hierarchical.model.*; 
+import com.mxgraph.shape.*; 
+import org.jgrapht.alg.*; 
+import com.jgraph.layout.hierarchical.model.*; 
+import com.jgraph.util.*; 
+import com.mxgraph.costfunction.*; 
+import com.jgraph.algebra.cost.*; 
+import com.mxgraph.util.*; 
+import org.jgrapht.event.*; 
+import org.jgrapht.experimental.alg.color.*; 
+import org.jgrapht.experimental.alg.*; 
+import org.jgrapht.alg.interfaces.*; 
+import org.jgrapht.alg.cycle.*; 
+import com.mxgraph.layout.hierarchical.stage.*; 
+import com.mxgraph.canvas.*; 
+import com.jgraph.io.svg.*; 
+import org.jgraph.graph.*; 
+import org.jgrapht.generate.*; 
+import com.jgraph.algebra.*; 
+import com.mxgraph.io.*; 
+import org.jgrapht.*; 
+import com.mxgraph.reader.*; 
+import com.jgraph.layout.routing.*; 
+import org.jgraph.util.*; 
+import org.jgrapht.experimental.permutation.*; 
+import org.jgrapht.experimental.dag.*; 
+import org.jgrapht.util.*; 
+import com.mxgraph.swing.view.*; 
+import com.jgraph.layout.graph.*; 
+import org.jgraph.event.*; 
+import org.jgrapht.alg.util.*; 
+import org.jgrapht.ext.*; 
+import org.jgrapht.experimental.equivalence.*; 
+import org.jgrapht.experimental.*; 
+import com.mxgraph.io.graphml.*; 
+import com.mxgraph.swing.util.*; 
+import com.jgraph.layout.hierarchical.*; 
+import org.jgrapht.experimental.isomorphism.*; 
+import com.jgraph.layout.*; 
+import com.mxgraph.layout.*; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class recursionByEdge extends PApplet {
+
+
+
+
+
+
+
+
+
+
 
 UndirectedGraph<String, Wire> graph;
 Set<Wire> all = new HashSet<Wire>();
@@ -28,13 +118,13 @@ int grid = 4; //1mm = 4pixels, 1cell = 1mm
 
 
 
-void setup()
+public void setup()
 {
     container = new Container();
     size(container.width, container.height);
     image(container.containerImg, 0, 0);
     filter(GRAY);
-    filter(THRESHOLD, 0.5);
+    filter(THRESHOLD, 0.5f);
     container.effectiveArea();
 
     // ********** Module Library ***************
@@ -78,17 +168,14 @@ void setup()
 } //setup end
 
 
-void draw()
+public void draw()
 {
-  if(solutions.size() > 0){
-    for(Module chunk : solutions.get(optimalWireNum)){
-      chunk.drawModule();
-    }
+  for(Module chunk : solutions.get(optimalWireNum)){
+    chunk.drawModule();
   }
-  else{println("the modules cannot be placed in this container");}
 } // draw end
 
-void exportGraph()
+public void exportGraph()
 {
     try
     {
@@ -108,7 +195,7 @@ void exportGraph()
 }
 
 
-void resetEdges(Wire[] eList)
+public void resetEdges(Wire[] eList)
 {
   for(int n = 0; n < eList.length; n++)
   {
@@ -119,7 +206,7 @@ void resetEdges(Wire[] eList)
 }
 
 
-void combine(Wire[] arr, int k, int startId, Wire[] branch, int numElem, Wire[] eList)
+public void combine(Wire[] arr, int k, int startId, Wire[] branch, int numElem, Wire[] eList)
 {
     if (numElem == k)
     {
@@ -314,6 +401,7 @@ void combine(Wire[] arr, int k, int startId, Wire[] branch, int numElem, Wire[] 
       }
 
       if(placeChunks(chunks)){addChunks(solutions,"" + wireNum, chunks);} // if all chuncks can be placed in the container, save the solution
+      else{println("cannot place these chunks");}
 
       if(wireNum < optimalWireNum){optimalWireNum = wireNum;}
              
@@ -343,12 +431,12 @@ class Wire<V> extends DefaultEdge
     this.label = label;
   }
 
-  V getSource()
+  public V getSource()
   {
     return s;
   }
 
-  V getTarget()
+  public V getTarget()
   {
     return t;
   }
@@ -378,7 +466,7 @@ class Container{
   }
 
   // Methods
-  void effectiveArea() {
+  public void effectiveArea() {
 
     left = containerImg.width;
     right = 0;
@@ -388,8 +476,8 @@ class Container{
     // ********* edge detection ********
     for (int x = 0; x < containerImg.width; x++) {
       for (int y = 0; y < containerImg.height; y++) {
-        color c = containerImg.get(x, y);
-        color new_zero = color(0, 0, 0);
+        int c = containerImg.get(x, y);
+        int new_zero = color(0, 0, 0);
         if (c <= color(220, 220, 220)) {
           containerImg.set(x, y, new_zero);
         } // set the area
@@ -409,8 +497,8 @@ class Container{
 
     }
 
-    num_X = int((right-left)/grid);
-    num_Y = int((top - bottom)/grid);
+    num_X = PApplet.parseInt((right-left)/grid);
+    num_Y = PApplet.parseInt((top - bottom)/grid);
     // ****** set grids **********  
     line(left, bottom, left, top); // left edge of grids
     stroke(255, 0, 0);
@@ -433,9 +521,9 @@ class Container{
       for (int m = 0; m <= num_Y; m++) {
         for (i = left + grid*n; i <= left + grid * (n +1 ) - 1; i++) {
           for (j = bottom + grid * m; j <= bottom + grid * (m + 1) - 1; j++) {
-            color c = containerImg.get(i, j);
+            int c = containerImg.get(i, j);
             if (c == color(255, 255, 255)) {
-              color gray = color(127, 127, 127);
+              int gray = color(127, 127, 127);
               fill(gray,200);
               rect(left + grid * n, bottom + grid * m, grid, grid);
               tainted=1;
@@ -462,7 +550,7 @@ class Module{
   String name;
   int order;
   int placeX = 0 ; int placeY = 0;
-  int grayscale = int(random(50,100)); // set a random grayscale
+  int grayscale = PApplet.parseInt(random(50,100)); // set a random grayscale
   boolean fixed = false;
   
 
@@ -474,17 +562,17 @@ class Module{
   }
   
   // Methods
-  String getName(){
+  public String getName(){
     return name;
   }
 
-  void setXY(boolean fixed, int placeX, int placeY){
+  public void setXY(boolean fixed, int placeX, int placeY){
     this.fixed = fixed;
     this.placeX = placeX;
     this.placeY = placeY;
   }
 
-  boolean place(){
+  public boolean place(){
     boolean collision = false;
     boolean breakn = false;
     boolean available = false;
@@ -494,14 +582,14 @@ class Module{
       for(int m=0; m<=container.num_Y; m++){
             breakn = false;
             collision = false;
-            color c = container.containerImg.get(container.left+grid*n+2,container.bottom+grid*m+2); // avoid the grid lines and get color of the cell
+            int c = container.containerImg.get(container.left+grid*n+2,container.bottom+grid*m+2); // avoid the grid lines and get color of the cell
             if(c == color(0,0,0)){
               x = container.left+grid*n;
               y = container.bottom+grid*m;
               
               for(int i = 0; i <= this.width; i++){
                  for(int j = 0; j <= this.height; j++){
-                   color p = get(x + grid*i +2, y + grid*j +2); // avoid the grid lines and get color of the cell
+                   int p = get(x + grid*i +2, y + grid*j +2); // avoid the grid lines and get color of the cell
                    if(p != color(0,0,0)){
                      collision = true;
                      break;
@@ -534,35 +622,35 @@ class Module{
     else return false;
   } // place method end
 
-  void rotate(){
+  public void rotate(){
     int t;
     t = width;
     width = height;
     height = t;
   } // rotate method end
   
-  void drawModule(){
-    color gray = color(this.grayscale); 
+  public void drawModule(){
+    int gray = color(this.grayscale); 
     fill(gray,200);
     noStroke();
     rect(this.placeX , this.placeY , this.width*grid, this.height*grid); // place the mudule into the container
   }  // drawModule method end
 } // class Module end
 
-void addModule(HashMap<String,Module> map, String key, String name, int width, int height){
+public void addModule(HashMap<String,Module> map, String key, String name, int width, int height){
   map.put( key, new Module(name, width, height) );
 }
 
-void addChunks(HashMap<String,ArrayList<Module>> map, String key, ArrayList<Module> solution){
+public void addChunks(HashMap<String,ArrayList<Module>> map, String key, ArrayList<Module> solution){
   map.put( key, solution);
 }
 
-boolean areaDetect(int x, int y, int w, int h){
+public boolean areaDetect(int x, int y, int w, int h){
   boolean available = true;
   for(int i = 0; i <= w; i++){
     for(int j = 0; j <= h; j++){
       available = true;
-      color p = get(x + grid*i +2, y + grid*j +2); // avoid the grid lines and get color of the cell
+      int p = get(x + grid*i +2, y + grid*j +2); // avoid the grid lines and get color of the cell
       if(p != color(0,0,0)){
         available = false;
         break;       
@@ -575,7 +663,7 @@ boolean areaDetect(int x, int y, int w, int h){
   return available;
 }
 
-boolean placeChunks(ArrayList<Module> chunks){
+public boolean placeChunks(ArrayList<Module> chunks){
     for (Module c : chunks){ // go through each module
       if(!c.fixed){
         if(!c.place()){
@@ -586,4 +674,13 @@ boolean placeChunks(ArrayList<Module> chunks){
       
     }
     return false;
+}
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "recursionByEdge" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
+  }
 }
