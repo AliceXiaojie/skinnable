@@ -41,7 +41,7 @@ void setup()
     modules = new HashMap<String,Module>(); 
     addModule(modules, "Power", "Power", 21, 21);
     addModule(modules, "Button", "Button", 27, 21);
-    addModule(modules, "Cloud", "Cloud", 66, 27);
+    addModule(modules, "Cloud", "Cloud", 66, 21);
     addModule(modules, "LED", "LED", 20, 21);
     addModule(modules, "Wire","Wire", 14, 21);
 
@@ -64,29 +64,33 @@ void setup()
     graph.addEdge("Cloud", "LED", new Wire<String>("Cloud","LED", ""));
     
     defaultEdges = graph.edgeSet();
-    optimalWireNum = defaultEdges.size();
     for(int k = 0; k <= defaultEdges.size(); k++) // graph traversal
     {
       edgeList = defaultEdges.toArray(new Wire[defaultEdges.size()]);
       branch = new Wire[k];
       combine(edgeList, k, 0, branch, 0, edgeList);
     }
+    // ArrayList<Module> a = solutions.get("3");
+    // println(optimalWireNum);
+    if(optimalWireNum != 0 && solutions.size() > 0){
+      for(Module chunk : solutions.get("" + optimalWireNum)){
+        println(chunk.getName());
+        chunk.drawModule();
+      }
+    }
+    else{println("the modules cannot be placed in this container");}
 
-
-
+    // container.effectiveArea();
+    // modules.get("Power").drawModule(); // Power module is fixed
+    // modules.get("Button").drawModule(); // Button module is fixed
+    // modules.get("LED").drawModule();  // LED module is fixed
+    // modules.get("Cloud").rotate();
+    // modules.get("Cloud").place();
+    // modules.get("Cloud").drawModule();
 
 } //setup end
 
 
-void draw()
-{
-  if(solutions.size() > 0){
-    for(Module chunk : solutions.get(optimalWireNum)){
-      chunk.drawModule();
-    }
-  }
-  else{println("the modules cannot be placed in this container");}
-} // draw end
 
 void exportGraph()
 {
@@ -142,26 +146,52 @@ void combine(Wire[] arr, int k, int startId, Wire[] branch, int numElem, Wire[] 
       int wireNum = graph.edgeSet().size();
       int wireWidth = modules.get("Wire").width;
       int wireHeight = modules.get("Wire").height;
+      boolean broke = false;
       chunks = new ArrayList<Module>(); 
       Module s,t;
       Wire current = null;
       Wire next = null;
 
-      for(int e = 0; e < edges.length; e++){
-        current = edges[e];
-        if(e < edges.length - 1){next = edges[e + 1];}  
+      for(int index = 0; index < edges.length; index++){
+        current = edges[index];
+        if(index < edges.length - 1){ next = edges[index + 1]; } 
+        else next = null; 
 
-        // ******* 1.If current edge & next edge are unlabeled *********
+        // ******* 1 If current edge is unlabeled *********
         if(current.toString().equals("")){ 
-          if(next != null && next.toString().equals("")){
-            s = modules.get(graph.getEdgeSource(current));
-            t = modules.get(graph.getEdgeTarget(current));
-            if(e == 0){
+          s = (Module)modules.get(graph.getEdgeSource(current)).clone();
+          t = (Module)modules.get(graph.getEdgeTarget(current)).clone();
+          if(next == null){
+            if(t.fixed){
+              if(areaDetect(t.placeX - wireWidth, t.placeY, t.width + 2 * wireWidth, wireHeight)){
+                t.width += 2 * wireWidth;
+                t.placeX -= wireWidth;
+                chunks.add(t);
+                t.drawModule();
+              }
+              else {
+                broke = true; 
+                break;
+              }
+            }
+            else{
+              t.width += wireWidth;
+              chunks.add(t);
+            }
+          }
+          // ******* 1.1 If current edge & next edge are unlabeled *********
+          else if(next != null && next.toString().equals("")){
+            if(index == 0){
               if(s.fixed){ // add wire right
                 if(areaDetect(s.placeX + s.width, s.placeY, wireWidth, wireHeight)){
                   s.width += wireWidth;
+                  chunks.add(s);
+                  s.drawModule();
                 }
-                else break;
+                else {
+                  broke = true; 
+                  break;
+                }
               }
               else if(!s.fixed){
                 s.width += wireWidth;
@@ -172,8 +202,13 @@ void combine(Wire[] arr, int k, int startId, Wire[] branch, int numElem, Wire[] 
               if(areaDetect(t.placeX - wireWidth, t.placeY, t.width + 2 * wireWidth, wireHeight)){
                 t.width += 2 * wireWidth;
                 t.placeX -= wireWidth;
+                chunks.add(t);
+                t.drawModule();
               }
-              else break;
+              else {
+                broke = true; 
+                break;
+              }
             }
             else{
               t.width += 2 * wireWidth;
@@ -181,19 +216,19 @@ void combine(Wire[] arr, int k, int startId, Wire[] branch, int numElem, Wire[] 
             }
              
           }
-        }       
-
-        // ******* 2.if current edge is unlabeled & next edge is labeled *********
-        else if(current.toString().equals("")){ 
-          if(next != null && next.toString().equals("")){
-            s = modules.get(graph.getEdgeSource(current));
-            t = modules.get(graph.getEdgeTarget(current));
-            if(e == 0){
+          // ******* 1.2 If current edge is unlabeled & next edge is labeled *********
+          else if(next != null && next.toString().equals("")){
+            if(index == 0){
               if(s.fixed){ // add wire right
                 if(areaDetect(s.placeX + s.width, s.placeY, wireWidth, wireHeight)){
                   s.width += wireWidth;
+                  chunks.add(s);
+                  s.drawModule();
                 }
-                else break;
+                else {
+                  broke = true; 
+                  break;
+                }
               }
               else if(!s.fixed){
                 s.width += wireWidth;
@@ -204,8 +239,13 @@ void combine(Wire[] arr, int k, int startId, Wire[] branch, int numElem, Wire[] 
               if(areaDetect(t.placeX - wireWidth, t.placeY, wireWidth, wireHeight)){
                 t.width += wireWidth;
                 t.placeX -= wireWidth;
+                chunks.add(t);
+                t.drawModule();
               }
-              else break;
+              else {
+                broke = true; 
+                break;
+              }
             }
             else{
               t.width += wireWidth;
@@ -213,99 +253,203 @@ void combine(Wire[] arr, int k, int startId, Wire[] branch, int numElem, Wire[] 
             }
              
           }
-        }
 
-        // ******* 3.if current edge is labeled & next edge is unlabeled *********
-        else if(current.toString().equals("removed")){ 
-          if(next != null && next.toString().equals("")){
-            s = modules.get(graph.getEdgeSource(current));
-            t = modules.get(graph.getEdgeTarget(current));
+        }       
+
+
+        // ******* 2 If current edge is labeled *********
+        else if(current.toString().equals("removed")){  
+          s = (Module)modules.get(graph.getEdgeSource(current)).clone();
+          t = (Module)modules.get(graph.getEdgeTarget(current)).clone();
+          if(next == null){
+            if(t.fixed){
+              t.drawModule();
+
+              if(chunks.get(chunks.size()-1).fixed){ // last chunk is fixed
+                if(chunks.get(chunks.size()-1).placeY != t.placeY){ 
+                  broke = true;
+                  break; 
+                }
+                else{
+                  if((t.placeX - chunks.get(chunks.size()-1).placeX) != chunks.get(chunks.size()-1).width){ 
+                    broke = true;
+                    break; 
+                  }
+                  else{
+                    chunks.get(chunks.size()-1).drawModule();
+                  }
+                }
+              }
+              else{ // last chunk is unplaced
+                if(areaDetect(t.placeX - chunks.get(chunks.size()-1).width, t.placeY, chunks.get(chunks.size()-1).width, chunks.get(chunks.size()-1).height)){
+                  chunks.get(chunks.size()-1).fixed = true;
+                  chunks.get(chunks.size()-1).placeX = (t.placeX - chunks.get(chunks.size()-1).width);
+                  chunks.get(chunks.size()-1).placeY = t.placeY;
+                  chunks.get(chunks.size()-1).drawModule();
+                }
+                else {
+                  broke = true; 
+                  break;
+                }
+              }
+
+            }
+            else{
+              chunks.get(chunks.size()-1).width += t.width;
+              chunks.get(chunks.size()-1).name = chunks.get(chunks.size()-1).name.concat("&" + t.name);
+            }
+          }
+          // ******* 2.1 If current edge is labeled & next edge is labeled *********
+          else if(next != null && next.toString().equals("removed")){
             
-            if(e == 0){
+            if(index == 0){ 
               if(!s.fixed){
                 chunks.add(s);
               }
             }
 
             if(s.fixed && t.fixed){
-              if(s.placeY != t.placeY){ break; }
+              if(s.placeY != t.placeY){ 
+                broke = true;
+                break;
+              }
               else{
-                if((t.placeX - s.placeX) != s.width){ break; }
+                if((t.placeX - s.placeX) != s.width){ 
+                  broke = true;
+                  break;
+                }
                 else{
-                  if(areaDetect(t.placeX + t.width, t.placeY, wireWidth, wireHeight)){
-                    t.width += wireWidth;
-                  }
-                  else break;
+                  chunks.add(s);
+                  chunks.add(t);
+                  s.drawModule();
+                  t.drawModule();
                 }
               }
             }
-            else if(s.fixed){
+            else if(s.fixed && !t.fixed){
+              chunks.add(s);
+              s.drawModule();
+              t.fixed = true;
+              if(areaDetect(s.placeX + s.width, s.placeY, t.width, t.height)){
+                t.placeX = (s.placeX + s.width);
+                t.placeY = s.placeY;
+                chunks.add(t);
+                t.drawModule();
+              }
+              else {
+                broke = true; 
+                break;
+              }
+            }
+            else if(!s.fixed && t.fixed){
+              chunks.add(t);
+              t.drawModule();
+              if(chunks.get(chunks.size()-1).fixed){ // last chunk is fixed
+                if(chunks.get(chunks.size()-1).placeY != t.placeY){ 
+                  broke = true;
+                  break; 
+                }
+                else{ 
+                  if((t.placeX - chunks.get(chunks.size()-1).placeX) != chunks.get(chunks.size()-1).width){ 
+                    broke = true;
+                    break; 
+                  }
+                  else{
+                    chunks.get(chunks.size()-1).drawModule();
+                  }
+                }
+              }
+              else{ // last chunk is unplaced
+                if(areaDetect(t.placeX - chunks.get(chunks.size()-1).width, t.placeY, chunks.get(chunks.size()-1).width, chunks.get(chunks.size()-1).height)){
+                  chunks.get(chunks.size()-1).fixed = true;
+                  chunks.get(chunks.size()-1).placeX = (t.placeX - chunks.get(chunks.size()-1).width);
+                  chunks.get(chunks.size()-1).placeY = t.placeY;
+                  chunks.get(chunks.size()-1).drawModule();
+                }
+                else {
+                  broke = true; 
+                  break;
+                }
+              }
+            }
+            else{
+              chunks.get(chunks.size()-1).width += t.width;
+              chunks.get(chunks.size()-1).name = chunks.get(chunks.size()-1).name.concat("&" + t.name);
+            }
+          }
+          // ******* 2.2 If current edge is labeled & next edge is unlabeled *********
+          else if(next != null && next.toString().equals("")){
+            if(index == 0){
+              if(!s.fixed){
+                chunks.add(s);
+              }
+            }
+
+            if(s.fixed && t.fixed){
+              if(s.placeY != t.placeY){ 
+                broke = true;
+                break;
+              }
+              else{
+                if((t.placeX - s.placeX) != s.width){ 
+                  broke = true;
+                  break; 
+                }
+                else{
+                  chunks.add(s);
+                  s.drawModule();
+                  if(areaDetect(t.placeX + t.width, t.placeY, wireWidth, wireHeight)){
+                    t.width += wireWidth;
+                    chunks.add(t);
+                    t.drawModule();
+                  }
+                  else {
+                    broke = true; 
+                    break;
+                  }
+                }
+              }
+            }
+            else if(s.fixed && !t.fixed){
+              chunks.add(s);
+              s.drawModule();
               t.fixed = true;
               if(areaDetect(s.placeX + s.width, s.placeY, t.width + wireWidth, t.height)){
                 t.width += wireWidth;
                 t.placeX = (s.placeX + s.width);
                 t.placeY = s.placeY;
+                chunks.add(t);
+                t.drawModule();
               }
-              else break;
+              else {
+                broke = true; 
+                break;
+              }
             }
-            else if(t.fixed){
+            else if(t.fixed && !s.fixed){
+              chunks.add(t);
+              t.drawModule();
               if(areaDetect(t.placeX - chunks.get(chunks.size()-1).width, t.placeY, chunks.get(chunks.size()-1).width, t.height)){
                 t.width += wireWidth;
                 chunks.get(chunks.size()-1).fixed = true;
                 chunks.get(chunks.size()-1).placeX = (t.placeX - chunks.get(chunks.size()-1).width);
                 chunks.get(chunks.size()-1).placeY = t.placeY;
+                chunks.get(chunks.size()-1).drawModule();
               }
-              else break;
+              else {
+                broke = true; 
+                break;
+              }
             }
             else{
-              chunks.get(chunks.size()-1).width += (t.width + wireWidth);
-              chunks.get(chunks.size()-1).name = chunks.get(chunks.size()-1).name.concat("&" + t.name);
-            }
-          }
-        }
-
-        // ******* 4.if current edge is labeled & next edge is unlabeled *********
-        else if(current.toString().equals("removed")){  
-          if(next != null && next.toString().equals("removed")){
-            s = modules.get(graph.getEdgeSource(current));
-            t = modules.get(graph.getEdgeTarget(current));
-            if(e == 0){
-              if(!s.fixed){
-                chunks.add(s);
+              if(chunks.size() > 0){
+                chunks.get(chunks.size()-1).width += (t.width + wireWidth);
+                chunks.get(chunks.size()-1).name = chunks.get(chunks.size()-1).name.concat("&" + t.name);
               }
-            }
-
-            if(s.fixed && t.fixed){
-              if(s.placeY != t.placeY){ break; }
               else{
-                if((t.placeX - s.placeX) != s.width){ break; }
-                else{
-                  if(areaDetect(t.placeX + t.width, t.placeY, wireWidth, wireHeight)){
-                    t.width += wireWidth;
-                  }
-                  else break;
-                }
+                t.width += wireWidth;
+                chunks.add(t);
               }
-            }
-            else if(s.fixed){
-              t.fixed = true;
-              if(areaDetect(s.placeX + s.width, s.placeY, t.width, t.height)){
-                t.placeX = (s.placeX + s.width);
-                t.placeY = s.placeY;
-              }
-              else break;
-            }
-            else if(t.fixed){
-              if(areaDetect(t.placeX - chunks.get(chunks.size()-1).width, t.placeY, chunks.get(chunks.size()-1).width, t.height)){
-                chunks.get(chunks.size()-1).fixed = true;
-                chunks.get(chunks.size()-1).placeX = (t.placeX - chunks.get(chunks.size()-1).width);
-                chunks.get(chunks.size()-1).placeY = t.placeY;
-              }
-              else break;
-            }
-            else{
-              chunks.get(chunks.size()-1).width += t.width;
-              chunks.get(chunks.size()-1).name = chunks.get(chunks.size()-1).name.concat("&" + t.name);
             }
           }
 
@@ -313,12 +457,29 @@ void combine(Wire[] arr, int k, int startId, Wire[] branch, int numElem, Wire[] 
 
       }
 
-      if(placeChunks(chunks)){addChunks(solutions,"" + wireNum, chunks);} // if all chuncks can be placed in the container, save the solution
+      println("broke:" + broke);
+      println("chunks:" + chunks.size());
+      for(Module mm : chunks){
+        println(mm.getName());
+      }
 
-      if(wireNum < optimalWireNum){optimalWireNum = wireNum;}
-             
+      if(!broke && placeChunks(chunks)){
+        addChunks(solutions,"" + wireNum, chunks); // if all chuncks can be placed in the container, save the solution
+        if(wireNum < optimalWireNum){optimalWireNum = wireNum;}
+      } 
+      // else if(broke){modules.get("Cloud").fixed = false;}
 
       resetEdges(eList);
+
+
+
+      // container = new Container();
+      // size(container.width, container.height);
+      // image(container.containerImg, 0, 0);
+      // filter(GRAY);
+      // filter(THRESHOLD, 0.5);
+      // container.effectiveArea();
+
       return;
     }
 
@@ -456,7 +617,7 @@ class Container{
   
 } // class Container end
 
-class Module{
+class Module implements Cloneable{
   // Attributor
   int width, height;
   String name;
@@ -472,7 +633,17 @@ class Module{
     this.width = width;
     this.height = height;
   }
-  
+  @Override
+  public Object clone() {  
+        Module m = null;  
+        try{  
+            m = (Module)super.clone();  
+        }catch(CloneNotSupportedException e) {  
+            e.printStackTrace();  
+        }  
+        return m;  
+    }  
+
   // Methods
   String getName(){
     return name;
@@ -542,8 +713,11 @@ class Module{
   } // rotate method end
   
   void drawModule(){
-    color gray = color(this.grayscale); 
-    fill(gray,200);
+    color c = color(this.grayscale); 
+    if(fixed){
+      c = color(50,0,0);
+    }
+    fill(c,200);
     noStroke();
     rect(this.placeX , this.placeY , this.width*grid, this.height*grid); // place the mudule into the container
   }  // drawModule method end
@@ -576,14 +750,20 @@ boolean areaDetect(int x, int y, int w, int h){
 }
 
 boolean placeChunks(ArrayList<Module> chunks){
+    println("Chunks size: " + chunks.size());
+    boolean b = true;
     for (Module c : chunks){ // go through each module
       if(!c.fixed){
         if(!c.place()){
           c.rotate();
-          if(!c.place()){break;}
+          if(!c.place()){
+            b = false;
+            break;
+          }
         }
       }
       
     }
-    return false;
+    if( b == false){ return false;}
+    else return true;
 }
