@@ -280,6 +280,15 @@ for help using the ACM Classification system.
 	is not unreasonable to expect drops in both size and price, and our
 	research will still apply.
 
+	In order to be able to arrange modules inside an arbitrary model, we
+	assume that the modules can be connected directly together or via
+	wire; even in the case of very small modules, wires will be
+	desirable to locate different interaction elements at different
+	places. To minimize both complexity and cost, our algorithm
+	minimizes the number of wires necessary to assemble the circuit,
+	balanced with the amount of scaling necessary to fit the modules in
+	the given arrangement.
+
 	The preliminary implementation described in this paper requires
 	hand-coding of the circuit and manual placement of the
 	fixed-location circuit modules. The software then generates
@@ -291,26 +300,43 @@ for help using the ACM Classification system.
 	where $S$ is the scale of the completed object, $W$ is the number of
 	extra wires required, and $w \in [0,1]$ adjusts the weight between
 	the two factors.
-	
 
-	Features:
-	\begin{itemize}
-		\item Represent the circuit as an undirected graph (currently
-			input by hand in code).
-		\item 2D packing to find the best arrangement.
-		\item Minimize cost function of size, number of wires; something
-			like $c = wS + (1-w)W$ where $S$ is size, $W$ is number of
-			wires, and $w$ is relative weight between the two.
-		\item Specify location of fixed modules (in code).
-		\item Search all possible logical arrangments of wires/not wires.
-		\item Output object for printing.
-	\end{itemize}
+	Our system represents the circuit as an undirected graph, with each
+	module a node in the graph and the electrical connections between
+	modules represented as edges. A property on each edge indicates
+	whether it represents a direct connection or a connection via a
+	wire, and a property on each node indicates whether the node is
+	to be at a fixed location or is free to move. This graph is the
+	\textit{logical layout} of the circuit, which does not change unless
+	the user changes which modules are fixed.
+
+	Starting with a graph in which all edges are marked as wires, we
+	mark edges as direct connections, generating all possible $2^n$
+	permutations. Each permutation has an associated $W$-cost which is
+	the number of wires. We then sort the list by $W$-cost, and starting
+	with the least expensive, attempt to place the modules inside the 3D
+	model.
+
+	Our preliminary implementation operates in 2D, placing modules into
+	a 2D outline of the model. At each attempted placement, it tests to
+	ensure that the module does not intersect the wall of the model; if
+	it does, the operation is aborted and the next graph in the list is
+	tested. For the purposes of placement, the system treats
+	directly-connected modules as single units. The software first
+	places the units with fixed modules. Assuming these fit within the
+	borders of the model, it then\ldots \todo{Stan and Xiaojie fill in
+	this part}.
+	
+	Some more details here.
+
+	Finally, the software outputs a finished model.
+
 
 
 
 
 \balance
 \bibliographystyle{acm-sigchi}
-\bibliography{sample}
+\bibliography{chi2015-wip,fabrication}
 
 \end{document}
