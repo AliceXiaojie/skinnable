@@ -1,0 +1,54 @@
+digraph G
+{
+	subgraph clusterArduino1
+	{
+		subgraph {"Arduino1.D1";"Arduino1.D5";"Arduino1.D9";}  //output (top)
+		subgraph {"Arduino1.D0";"Arduino1.A0";"Arduino1.A1";}  //input  (bottom)
+	}
+	subgraph clusterArduino2
+	{
+		"Arduino2.D1";"Arduino2.D5";"Arduino2.D9";  //output (top)
+		"Arduino2.D0";"Arduino2.A0";"Arduino2.A1";  //input  (bottom)
+	}
+
+	subgraph clusterPower1 {"Power1.out";}
+
+	subgraph clusterBranch1
+	{
+		"Branch1.in";
+		"Branch1.out1"; "Branch1.out2"; "Branch1.out3";
+	}
+
+	subgraph clusterButton1 {"Button1.in"; "Button1.out";}
+	subgraph clusterLatch1 {"Latch1.in"; "Latch1.out";}
+	subgraph clusterLed1 {"Led1.in"; "Led1.out";}
+	subgraph clusterTemperature1 {"Temperature1.in"; "Temperature1.out";}
+	subgraph clusterDimmer1 {"Dimmer1.in"; "Dimmer1.out";}
+	subgraph clusterNumber1 {"Number1.in"; "Number1.out";}
+	subgraph clusterNumber2 {"Number2.in"; "Number2.out";}
+	subgraph clusterLed2 {"Led2.in"; "Led2.out";}
+	subgraph clusterServo1 {"Servo1.in";}
+	subgraph clusterCloud1 {"Cloud1.in"; "Cloud1.out";}
+
+	"Power1.out" -> "Branch1.in";
+
+	"Branch1.out1" -> "Button1.in";
+	"Button1.out" -> "Latch1.in";
+	"Latch1.out" -> "Led1.in";
+	"Led1.out" -> "Arduino2.D9";
+
+	"Branch1.out2" -> "Temperature1.in";
+	"Temperature1.out" -> "Number1.in";
+	"Number1.out" -> "Arduino2.D5";
+
+	"Branch1.out3" -> "Dimmer1.in";
+	"Dimmer1.out" -> "Arduino1.A0";
+
+	"Arduino1.D5" -> "Number2.in";
+	"Number2.out" -> "Arduino2.D1";
+	"Arduino1.A1" -> "Cloud1.out";
+
+	"Arduino2.A0" -> "Led2.in";
+	"Led2.out" -> "Servo1.in";
+	"Arduino2.D0" -> "Cloud1.in";
+}
