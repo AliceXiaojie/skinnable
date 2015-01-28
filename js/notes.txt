@@ -1,0 +1,39 @@
+What do we need in a data structure?
+
+Example module: LittleBits Arduino (http://littlebits.cc/bits/arduino)
+	- Has a USB micro connector on one end
+	- Has 6 magnetic connectors, 3 per side
+		- Side 1
+			- D1/TX (out)
+			- D5~ (out)
+				- with physical toggle switch between analog/PWM
+			- D9~ (out)
+				- with physical toggle switch between analog/PWM
+		- Side 2
+			- D0/RX (in)
+			- A0 (in)
+			- A1 (in)
+
+Object: Module
+Purpose: To hold information about an individual electronic component
+	module (e.g. a LittleBit module)
+Members:
+	- type (object type, inherit)
+	- name (individual name for visual display)
+	- id (e.g., LittleBits ID such as "w6")
+	- cost of module (e.g. 1 for wire module)
+	- connections
+		- name (e.g. "A0")
+		- direction (in/out)
+		- what it's connected to
+	- position (center x,y; rotation)
+	- fixed (boolean)
+	- size (in holes or in mm?)
+
+See test.json for an example.
+
+Ideally:
+
+	a = new Arduino({name: 'Arduino 1'});
+	b = new Arduino({name: 'Arduino 2'});
+	a.D1.connect(b.D0);
