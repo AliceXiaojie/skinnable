@@ -29,8 +29,19 @@ Members:
 	- position (center x,y; rotation)
 	- fixed (boolean)
 	- size (in holes or in mm?)
+	- whether rotation matters (e.g. button is rotation-invariant)
 
-See test.json for an example.
+See arduino.json for an example.
+
+
+Object: Connection
+Purpose: To expose a connectable part of a module to other modules,
+	to represent the type and direction of the connection, and to hold
+	information about what else the module is connected to.
+Members:
+	- name (e.g. "A0")
+	- direction (in/out)
+	- what it's connected to
 
 Ideally:
 

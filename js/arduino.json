@@ -3,7 +3,7 @@
 	"name": "Arduino 1",
 	"id":   "w6",
 	"cost": 0,
-	"length": 11,
+	"width": 11,
 	"height": 5,
 	"connections":
 	{
