@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2015 by stannnn (http://jsbin.com/nenuze/2/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+<link href="style.css" rel="stylesheet" />
+<meta charset=utf-8 />
+<title>Cytoscape.js initialisation</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
+<script src="code.js"></script>
+<style id="jsbin-css">
+body { 
+  font: 14px helvetica neue, helvetica, arial, sans-serif;
+}
+
+#cy {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+
+</style>
+</head>
+<body>
+<div id="cy"></div>
+<script id="jsbin-javascript">
+$(function(){ // on dom ready
+
+var cy = cytoscape({
+  container: document.getElementById('cy'),
+  
+  style: [
+    {
+      selector: 'node',
+      css: {
+        'content': 'data(id)',
+        'text-valign': 'center',
+        'text-halign': 'center',
+        'shape': 'rectangle'
+      }
+    },
+    {
+      selector: '$node > node',
+      css: {
+        'padding-top': '10px',
+        'padding-left': '10px',
+        'padding-bottom': '10px',
+        'padding-right': '10px',
+        'text-valign': 'top',
+        'text-halign': 'center'
+      }
+    },
+    {
+      selector: 'edge',
+      css: {
+        'target-arrow-shape': 'none',
+      }
+    },
+    {
+      selector: 'edge#7',
+      css: {
+        'line-color': 'red',
+      }
+    },
+    {
+      selector: 'edge#10',
+      css: {
+        'line-color': 'red',
+      }
+    },
+    {
+      selector: ':selected',
+      css: {
+        'background-color': 'black',
+        'line-color': 'black',
+        'target-arrow-color': 'black',
+        'source-arrow-color': 'black'
+      }
+    }
+  ],
+  
+  elements: {
+    nodes: [
+      { data: { id: 'Power' } },
+      
+      { data: { id: 'Branch' } },
+      { data: { id: 'Branch.a', parent: 'Branch' } },
+      { data: { id: 'Branch.b', parent: 'Branch' } },
+      { data: { id: 'Branch.c', parent: 'Branch'} },
+      
+      { data: { id: 'Button' } },
+      { data: { id: 'Temperature' } },
+      { data: { id: 'Dimmer' } },
+      { data: { id: 'Latch' } },
+      { data: { id: 'Number1' } },
+      
+      { data: { id: 'Arduino1' } },
+      { data: { id: 'Arduino1.A0', parent: 'Arduino1' } },
+      { data: { id: 'Arduino1.A1', parent: 'Arduino1' } },
+      { data: { id: 'Arduino1.D0', parent: 'Arduino1'} },
+      { data: { id: 'Arduino1.D1', parent: 'Arduino1'} },
+      { data: { id: 'Arduino1.D5', parent: 'Arduino1'} },
+      { data: { id: 'Arduino1.D9', parent: 'Arduino1'} },
+      
+      { data: { id: 'Arduino2' } },
+      { data: { id: 'Arduino2.A0', parent: 'Arduino2' } },
+      { data: { id: 'Arduino2.A1', parent: 'Arduino2' } },
+      { data: { id: 'Arduino2.D0', parent: 'Arduino2'} },
+      { data: { id: 'Arduino2.D1', parent: 'Arduino2'} },
+      { data: { id: 'Arduino2.D5', parent: 'Arduino2'} },
+      { data: { id: 'Arduino2.D9', parent: 'Arduino2'} },
+      
+      { data: { id: 'LED1' } },
+      
+      { data: { id: 'LED2' } },
+      
+      { data: { id: 'Servo' } },
+      
+      { data: { id: 'Number2' } },
+      
+      { data: { id: 'Cloud' } }
+      
+    
+    ],
+    edges: [
+      { data: { id: '1', source: 'Power', target: 'Branch' } },
+      { data: { id: '2', source: 'Branch.a', target: 'Button' } },
+      { data: { id: '3', source: 'Button', target: 'Latch' } },
+      { data: { id: '4', source: 'Latch', target: 'LED1' } },
+      { data: { id: '5', source: 'Arduino2.A0', target: 'LED2' } },
+      { data: { id: '6', source: 'LED2', target: 'Servo' } },
+      { data: { id: '7', source: 'Branch.b', target: 'Temperature' } },
+      { data: { id: '8', source: 'Temperature', target: 'Number1' } },
+      { data: { id: '9', source: 'Number1', target: 'Arduino2.D5' } },
+      { data: { id: '10', source: 'Arduino2.D0', target: 'Cloud' } },
+      { data: { id: '11', source: 'Branch.c', target: 'Dimmer' } },
+      { data: { id: '12', source: 'Dimmer', target: 'Arduino1.A0' } },
+      { data: { id: '13', source: 'Arduino1.D5', target: 'Number2' } },
+      { data: { id: '14', source: 'Number2', target: 'Aruino2.D1' } },
+      { data: { id: '15', source: 'Cloud', target: 'Arduino1.A1' } },
+
+      
+      
+    ]
+  },
+  
+
+});
+
+}); // on dom ready
+</script>
+</body>
+</html>
