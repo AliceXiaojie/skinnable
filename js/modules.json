@@ -1,0 +1,47 @@
+{
+	"arduino":
+	{
+		"type": "arduino",
+		"name": "Arduino",
+		"id":   "w6",
+		"cost": 0,
+		"width": 11,
+		"height": 5,
+		"connections":
+		{
+			"left": [{"type": "usb"}],
+			"right": [],
+			"top":
+			[
+				{"direction": "out", "position": 0, "type": "D1", "name": "D1/TX"},
+				{"direction": "out", "position": 4, "type": "D5", "name": "D5~"},
+				{"direction": "out", "position": 8, "type": "D9", "name": "D9~"}
+			],
+			"bottom":
+			[
+				{"direction": "in", "position": 0, "type": "D0", "name": "D0/RX"},
+				{"direction": "in", "position": 4, "type": "A0"},
+				{"direction": "in", "position": 8, "type": "A1"}
+			]
+		},
+		"fixed": false
+	},
+	"_inout":
+	{
+		"type": "inout",
+		"cost": 0,
+		"width": 4,
+		"height": 5,
+		"connections":
+		{
+			"left":  [{"direction": "in",  "type": "in"}],
+			"right": [{"direction": "out", "type": "out"}]
+		}
+	},
+	"button":
+	{
+		"prototype": "_inout",
+		"type": "button",
+		"name": "button"
+	}
+}
