@@ -1,0 +1,38 @@
+{
+	"modules":
+	[
+		{"UsbPower":    "UsbPower"},
+		{"Branch":      "Branch"},
+		{"Dimmer":      "Dimmer"},
+		{"Temperature": "Temperature"},
+		{"Button":      "Button"},
+		{"Latch":       "Latch"},
+		{"LED1":        "Led"},
+		{"LED2":        "Led"},
+		{"Number1":     "Number"},
+		{"Number2":     "Number"},
+		{"Arduino1":    "Arduino"},
+		{"Arduino2":    "Arduino"},
+		{"Servo":       "Servo"},
+		{"Cloud":       "Cloud"}
+	],
+	"connections":
+	[
+		["UsbPower.out", "Branch.in"],
+		["Branch.out1",  "Button.in"],
+		["Branch.out2",  "Temperature.in"],
+		["Branch.out3",  "Dimmer.in"],
+		["Button.out", "Latch.in"],
+		["Latch.out", "LED1.in"],
+		["LED1.out", "Arduino2.D0"],
+		["Temperature.out", "Number1.in"],
+		["Number1.out", "Arduino2.A0"],
+		["Dimmer.out", "Arduino1.A0"],
+		["Arduino1.D5", "Number2.in"],
+		["Number2.out", "Arduino2.A1"],
+		["Arduino1.A1", "Cloud.out"],
+		["Arduino2.D5", "LED2.in"],
+		["LED2.out", "Servo.in"],
+		["Arduino2.D9", "Cloud.in"]
+	]
+}
