@@ -64,10 +64,10 @@
 		"height": 5,
 		"connections":
 		{
-			"left": [{"direction": "in", "type": "in"}],
-			"top": [{"direction": "out", "type": "out"}],
-			"right": [{"direction": "out", "type": "out"}],
-			"bottom": [{"direction": "out", "type": "out"}]
+			"left":   [{"direction": "in",  "type": "in"}],
+			"top":    [{"direction": "out", "type": "out1"}],
+			"right":  [{"direction": "out", "type": "out2"}],
+			"bottom": [{"direction": "out", "type": "out3"}]
 		}
 	},
 	"Temperature":
