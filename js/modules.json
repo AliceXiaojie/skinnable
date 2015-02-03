@@ -1,10 +1,30 @@
 {
-	"arduino":
+	"_inout":
+	{
+		"type": "inout",
+		"width": 4,
+		"height": 5,
+		"connections":
+		{
+			"left":  [{"direction": "in",  "type": "in"}],
+			"right": [{"direction": "out", "type": "out"}]
+		}
+	},
+	"_power":
+	{
+		"type": "power",
+		"width": 4,
+		"height": 5,
+		"connections":
+		{
+			"right": [{"direction": "out", "type": "out"}]
+		}
+	},
+	"Arduino":
 	{
 		"type": "arduino",
 		"name": "Arduino",
 		"id":   "w6",
-		"cost": 0,
 		"width": 11,
 		"height": 5,
 		"connections":
@@ -26,22 +46,69 @@
 		},
 		"fixed": false
 	},
-	"_inout":
+	"Button":
 	{
-		"type": "inout",
-		"cost": 0,
-		"width": 4,
+		"template": "_inout",
+		"type": "button"
+	},
+	"UsbPower":
+	{
+		"template": "_power",
+		"type": "usb power"
+	},
+	"Branch":
+	{
+		"type": "branch",
+		"name": "branch",
+		"id": "x",
 		"height": 5,
 		"connections":
 		{
-			"left":  [{"direction": "in",  "type": "in"}],
-			"right": [{"direction": "out", "type": "out"}]
+			"left": [{"direction": "in", "type": "in"}],
+			"top": [{"direction": "out", "type": "out"}],
+			"right": [{"direction": "out", "type": "out"}],
+			"bottom": [{"direction": "out", "type": "out"}]
 		}
 	},
-	"button":
+	"Temperature":
 	{
-		"prototype": "_inout",
-		"type": "button",
-		"name": "button"
+		"template": "_inout",
+		"type": "temperature"
+	},
+	"Latch":
+	{
+		"template": "_inout",
+		"type": "latch"
+	},
+	"Led":
+	{
+		"template": "_inout",
+		"type": "LED"
+	},
+	"Servo":
+	{
+		"template": "_inout",
+		"type": "servo"
+	},
+	"Number":
+	{
+		"template": "_inout",
+		"type": "number"
+	},
+	"Cloud":
+	{
+		"template": "_inout",
+		"type": "cloud"
+	},
+	"Dimmer":
+	{
+		"template": "_inout",
+		"type": "dimmer"
+	},
+	"Wire":
+	{
+		"template": "_inout",
+		"type": "wire",
+		"cost": 1
 	}
 }
