@@ -32,6 +32,11 @@ function Module(init)
 }
 
 
+//Load modules from a JSON file. Return a collection of object prototypes
+// such that we can do:
+//   new modules[modname]("name");
+// e.g.:
+//   new modules['Arduino']("Best Arduino");
 function loadModules(file)
 {
 	var mods = require(file);

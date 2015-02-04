@@ -1,21 +1,21 @@
 {
 	"modules":
-	[
-		{"UsbPower":    "UsbPower"},
-		{"Branch":      "Branch"},
-		{"Dimmer":      "Dimmer"},
-		{"Temperature": "Temperature"},
-		{"Button":      "Button"},
-		{"Latch":       "Latch"},
-		{"LED1":        "Led"},
-		{"LED2":        "Led"},
-		{"Number1":     "Number"},
-		{"Number2":     "Number"},
-		{"Arduino1":    "Arduino"},
-		{"Arduino2":    "Arduino"},
-		{"Servo":       "Servo"},
-		{"Cloud":       "Cloud"}
-	],
+	{
+		"UsbPower":    "UsbPower",
+		"Branch":      "Branch",
+		"Dimmer":      "Dimmer",
+		"Temperature": "Temperature",
+		"Button":      "Button",
+		"Latch":       "Latch",
+		"LED1":        "Led",
+		"LED2":        "Led",
+		"Number1":     "Number",
+		"Number2":     "Number",
+		"Arduino1":    "Arduino",
+		"Arduino2":    "Arduino",
+		"Servo":       "Servo",
+		"Cloud":       "Cloud"
+	},
 	"connections":
 	[
 		["UsbPower.out", "Branch.in"],
