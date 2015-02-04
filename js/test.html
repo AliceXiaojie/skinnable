@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+		<script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
+		<script>
+			$(function()
+			{
+				var cy = cytoscape(
+					{
+						"container": document.getElementById('cy'),
+						style: [
+							{
+							selector: 'node',
+							css: {
+								'content': 'data(id)',
+								'text-valign': 'center',
+								'text-halign': 'center'
+							}
+						},
+						{
+							selector: '$node > node',
+							css: {
+								'padding-top': '10px',
+								'padding-left': '10px',
+								'padding-bottom': '10px',
+								'padding-right': '10px',
+								'text-valign': 'top',
+								'text-halign': 'center'
+							}
+						},
+						{
+							selector: 'edge',
+							css: {
+								'target-arrow-shape': 'triangle'
+							}
+						},
+						{
+							selector: ':selected',
+							css: {
+								'background-color': 'black',
+								'line-color': 'black',
+								'target-arrow-color': 'black',
+								'source-arrow-color': 'black'
+							}
+						}
+						], 
+						layout: {name: 'cose', padding: 5},
+						"elements": {
+							"nodes": [
+								{
+									"data": {
+										"id": "UsbPower",
+										"type": "usb power"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "UsbPower.out",
+										"parent": "UsbPower"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Branch",
+										"type": "branch"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Branch.in",
+										"parent": "Branch"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Branch.out1",
+										"parent": "Branch"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Branch.out2",
+										"parent": "Branch"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Branch.out3",
+										"parent": "Branch"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Dimmer",
+										"type": "wire"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Dimmer.in",
+										"parent": "Dimmer"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Dimmer.out",
+										"parent": "Dimmer"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Temperature",
+										"type": "wire"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Temperature.in",
+										"parent": "Temperature"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Temperature.out",
+										"parent": "Temperature"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Button",
+										"type": "wire"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Button.in",
+										"parent": "Button"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Button.out",
+										"parent": "Button"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Latch",
+										"type": "wire"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Latch.in",
+										"parent": "Latch"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Latch.out",
+										"parent": "Latch"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "LED1",
+										"type": "wire"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "LED1.in",
+										"parent": "LED1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "LED1.out",
+										"parent": "LED1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "LED2",
+										"type": "wire"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "LED2.in",
+										"parent": "LED2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "LED2.out",
+										"parent": "LED2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Number1",
+										"type": "wire"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Number1.in",
+										"parent": "Number1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Number1.out",
+										"parent": "Number1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Number2",
+										"type": "wire"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Number2.in",
+										"parent": "Number2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Number2.out",
+										"parent": "Number2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino1",
+										"type": "arduino"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino1.usb",
+										"parent": "Arduino1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino1.D1",
+										"parent": "Arduino1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino1.D5",
+										"parent": "Arduino1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino1.D9",
+										"parent": "Arduino1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino1.D0",
+										"parent": "Arduino1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino1.A0",
+										"parent": "Arduino1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino1.A1",
+										"parent": "Arduino1"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino2",
+										"type": "arduino"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino2.usb",
+										"parent": "Arduino2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino2.D1",
+										"parent": "Arduino2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino2.D5",
+										"parent": "Arduino2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino2.D9",
+										"parent": "Arduino2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino2.D0",
+										"parent": "Arduino2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino2.A0",
+										"parent": "Arduino2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Arduino2.A1",
+										"parent": "Arduino2"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Servo",
+										"type": "wire"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Servo.in",
+										"parent": "Servo"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Servo.out",
+										"parent": "Servo"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Cloud",
+										"type": "wire"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Cloud.in",
+										"parent": "Cloud"
+									},
+									"group": "nodes",
+								},
+								{
+									"data": {
+										"id": "Cloud.out",
+										"parent": "Cloud"
+									},
+									"group": "nodes",
+								}
+							],
+							"edges": [
+								{
+									"data": {
+										"id": "UsbPower.out-Branch.in",
+										"source": "UsbPower.out",
+										"target": "Branch.in"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Branch.out1-Button.in",
+										"source": "Branch.out1",
+										"target": "Button.in"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Branch.out2-Temperature.in",
+										"source": "Branch.out2",
+										"target": "Temperature.in"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Branch.out3-Dimmer.in",
+										"source": "Branch.out3",
+										"target": "Dimmer.in"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Button.out-Latch.in",
+										"source": "Button.out",
+										"target": "Latch.in"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Latch.out-LED1.in",
+										"source": "Latch.out",
+										"target": "LED1.in"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "LED1.out-Arduino2.D0",
+										"source": "LED1.out",
+										"target": "Arduino2.D0"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Temperature.out-Number1.in",
+										"source": "Temperature.out",
+										"target": "Number1.in"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Number1.out-Arduino2.A0",
+										"source": "Number1.out",
+										"target": "Arduino2.A0"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Dimmer.out-Arduino1.A0",
+										"source": "Dimmer.out",
+										"target": "Arduino1.A0"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Arduino1.D5-Number2.in",
+										"source": "Arduino1.D5",
+										"target": "Number2.in"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Number2.out-Arduino2.A1",
+										"source": "Number2.out",
+										"target": "Arduino2.A1"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Arduino1.A1-Cloud.out",
+										"source": "Arduino1.A1",
+										"target": "Cloud.out"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Arduino2.D5-LED2.in",
+										"source": "Arduino2.D5",
+										"target": "LED2.in"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "LED2.out-Servo.in",
+										"source": "LED2.out",
+										"target": "Servo.in"
+									},
+									"group": "edges",
+								},
+								{
+									"data": {
+										"id": "Arduino2.D9-Cloud.in",
+										"source": "Arduino2.D9",
+										"target": "Cloud.in"
+									},
+									"group": "edges",
+								}
+							]
+						}
+					}
+				);
+			}
+		);
+	</script>
+	<body>
+		<div id="cy" style="height:100%;width:100%;position:absolute;left:0;top:0;"></div>
+	</body>
+</html>
