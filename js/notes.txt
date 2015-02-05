@@ -1,3 +1,5 @@
+Data Structures
+===============
 What do we need in a data structure?
 
 Example module: LittleBits Arduino (http://littlebits.cc/bits/arduino)
@@ -48,3 +50,18 @@ Ideally:
 	a = new Arduino({name: 'Arduino 1'});
 	b = new Arduino({name: 'Arduino 2'});
 	a.D1.connect(b.D0);
+
+
+Traversal
+=========
+Given a graph with some nodes set as fixed, and a "root" node:
+	initialize by setting costs of all edges to 1; then
+	set visited to []
+	function traverse(root, visited):
+		for each edge in root:
+			if edge.target is in visited:
+				continue
+			visited.append(edge.target)
+			if edge.target is not fixed:
+				edge.cost = 0
+			traverse(edge.target, visited)
