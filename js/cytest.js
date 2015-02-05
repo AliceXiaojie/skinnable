@@ -42,23 +42,6 @@ Object.keys(therm.modules).forEach(
 				type: props.type
 			}
 		});
-
-		//Add the connectable parts of the module as sub-nodes
-		for(var side in props.connections)
-			props.connections[side].forEach(
-				function(c)
-				{
-					cy.add(
-					{
-						group: 'nodes',
-						data:
-						{
-							id: modname + '.' + c.type,
-							parent: modname
-						}
-					});
-				}
-			);
 	}
 );
 
@@ -75,8 +58,8 @@ therm.connections.forEach(
 			data:
 			{
 				id: from + '-' + to,
-				source: from,
-				target: to
+				source: from.split('.')[0],
+				target: to.split('.')[0]
 			}
 		});
 	}
